@@ -122,121 +122,124 @@ vp merge_sort(vp unsorted, int size){ //sorts the vector of points "unsorted" ac
 		vp sort1(m);    // first m points
 		vp sort2(size-m);  // remaining points
 
-		f(i,0,m){
+		// splitting the vector of points from the middle
+		f(i,0,m){ // first half
 			sort1[i].x = unsorted[i].x;
 			sort1[i].y = unsorted[i].y;
 			sort1[i].attribute = unsorted[i].attribute;
 		}
 
-		f(i,m,size){
+		f(i,m,size){  // second half
 			sort2[i-m].x = unsorted[i].x;
 			sort2[i-m].y = unsorted[i].y;
 			sort2[i-m].attribute = unsorted[i].attribute;
 		}
 
-		sort1 = merge_sort(sort1, m);        // recursion
+		sort1 = merge_sort(sort1, m);        // recusively sorting each half
 		sort2 = merge_sort(sort2, size-m);
 
-		sorted = merge(sort1, sort2, m, size-m);
+		sorted = merge(sort1, sort2, m, size-m);  // merging sorted halfs, in a way that they are sorted by attribute
 		
 		return sorted; // sorted vector of points
 	}
 }
 
 double full_set_wt(vp set, int k, int type){  // returns weight of steiner tree
+	// k = length of set
 	for(int i = 0; i < k; i++)
 	{
-		set[i].attribute = set[i].x;
+		set[i].attribute = set[i].x; // setting x-coordinate as attribute of points
 	}
 
-	vp sortx_set = merge_sort(set, k);
+	vp sortx_set = merge_sort(set, k); // sorting the points by x-coordinate
 
 	f(i,0,k){
-		set[i].attribute = set[i].y;
+		set[i].attribute = set[i].y; // setting y-coordinate as attribute of points
 	}
 
-	vp sorty_set = merge_sort(set, k);
+	vp sorty_set = merge_sort(set, k); // sorting the points by y-coordinate
 
 	double wt = 0;  // weight of steiner tree
-
+	
+	// The paper we implemented defined types of graphs
 	if(type == 1 | type == 2){
-		wt += sortx_set[k-1].x - sortx_set[0].x;
+		wt += sortx_set[k-1].x - sortx_set[0].x; // length of main horizontal leg
 		if(type == 1){
 			f(i,1,k){
-				wt += abs(sortx_set[i].y - sortx_set[0].y);
+				wt += abs(sortx_set[i].y - sortx_set[0].y); // length of vertical branches
 			}
 		}
 		else if(type == 2){
 			f(i,0,k-1){
-				wt += abs(sortx_set[i].y - sortx_set[k-1].y);
+				wt += abs(sortx_set[i].y - sortx_set[k-1].y); // length of vertical branches
 			}
 		}
 	}
 	else if(type == 3 | type == 4){
-		wt += sorty_set[k-1].y - sorty_set[0].y;
+		wt += sorty_set[k-1].y - sorty_set[0].y; //length of main vertical leg
 		if(type == 3){
 			f(i,1,k){
-				wt += abs(sorty_set[i].x - sorty_set[0].x);
+				wt += abs(sorty_set[i].x - sorty_set[0].x); // length of horizontal branches
 			}
 		}
 		else if(type == 4){
 			f(i,0,k-1){
-				wt += abs(sorty_set[i].x - sorty_set[k-1].x);
+				wt += abs(sorty_set[i].x - sorty_set[k-1].x); // length of horizontal branches
 			}
 		}
 	}
 	else if(type == 5 | type == 6){
-		wt += sortx_set[k-1].x - sortx_set[0].x;
+		wt += sortx_set[k-1].x - sortx_set[0].x; // length of main horizontal leg
 		if(type == 5){
 			f(i,1,k-1){
-				wt += abs(sortx_set[i].y - sortx_set[0].y);
+				wt += abs(sortx_set[i].y - sortx_set[0].y); // length of vertical branches
 			}
 		}
 		else if(type == 6){
 			f(i,1,k-1){
-				wt += abs(sortx_set[i].y - sortx_set[k-1].y);
+				wt += abs(sortx_set[i].y - sortx_set[k-1].y); // length of vertical branches
 			}
 		}
 	}
 	else if(type == 7 | type == 8){
-		wt += sorty_set[k-1].y - sorty_set[0].y;
+		wt += sorty_set[k-1].y - sorty_set[0].y; // length of main vertical leg
 		if(type == 7){
 			f(i,1,k-1){
-				wt += abs(sorty_set[i].x - sorty_set[0].x);
+				wt += abs(sorty_set[i].x - sorty_set[0].x); // length of horizontal branches
 			}
 		}
 		else if(type == 8){
 			f(i,1,k-1){
-				wt += abs(sorty_set[i].x - sorty_set[k-1].x);
-				// cout<<"line 190 "<<i<<" "<<wt<<endl;
+				wt += abs(sorty_set[i].x - sorty_set[k-1].x); // length of horizontal branches
 			}
 		}
 	}
 	
-	if(k==1) 
+	if(k==1) // only one point
 		wt = 0;
 	
 	return wt;
 }
 
-int net_type(vp pts, int k){
+int net_type(vp pts, int k){ // Takes a set of points and determines the type of tree they will form
+	// k = length of pts
 	f(i,0,k){
-		pts[i].attribute = pts[i].x;
+		pts[i].attribute = pts[i].x; // assigning x-coordinate as attribute
 	}
 
-	vp sortx_pts = merge_sort(pts, k);
+	vp sortx_pts = merge_sort(pts, k); // sorting by x-coordinate
 
 	f(i,0,k){
-		pts[i].attribute = pts[i].y;
+		pts[i].attribute = pts[i].y; // assigning y-coordinate as attribute
 	}
 
-	vp sorty_pts = merge_sort(pts, k);
+	vp sorty_pts = merge_sort(pts, k); // sorting by y-coordinate
 
-	int a = sortx_pts[0].y;
-	int b = sortx_pts[k-1].y;
+	int a = sortx_pts[0].y; // y-coordinate of left-most point
+	int b = sortx_pts[k-1].y; // y-coordinate of right-most point
 	
-	int p = sorty_pts[0].x;
-	int q = sorty_pts[k-1].x;
+	int p = sorty_pts[0].x; // x-coordinate of bottom-most point
+	int q = sorty_pts[k-1].x; // x-coordinate of top-most point
 
 	int type1 = 1;          // horizontal type 1 with extreme terminal on the left
 	int type2 = 1;			// horizontal type 1 with extreme terminal on the right
@@ -250,17 +253,17 @@ int net_type(vp pts, int k){
 
 	// horizontal circuits
 	f(i,1,(k-1)){
-		if((sortx_pts[i].y-a)*(sortx_pts[i+1].y-a)>0)
+		if((sortx_pts[i].y-a)*(sortx_pts[i+1].y-a)>0) // if there are two consecutive vertical branches on the same side
 			type1 = 0;
 	}
 
 	f(i,0,(k-2)){
-		if((sortx_pts[i].y-b)*(sortx_pts[i+1].y-b)>0)
+		if((sortx_pts[i].y-b)*(sortx_pts[i+1].y-b)>0) // if there are two consecutive vertical branches on the same side
 			type2 = 0;
 	}
 
 	f(i,1,(k-2)){
-		if((sortx_pts[i].y-a)*(sortx_pts[i+1].y-a)>0)
+		if((sortx_pts[i].y-a)*(sortx_pts[i+1].y-a)>0) // if there are two consecutive vertical branches on the same side
 			type5 = 0;
 	}
 	if((sortx_pts[k-2].y-a)*(sortx_pts[k-1].y-a)<0 | abs(sortx_pts[k-2].y-a)<abs(sortx_pts[k-1].y-a))
@@ -302,7 +305,6 @@ int net_type(vp pts, int k){
 	double wt = DBL_MAX;
 
 	if(type1 == 1){
-		// cout<<"TYPE 1"<<endl;
 		if(wt>full_set_wt(pts,k,1)){
 			wt = full_set_wt(pts,k,1);
 			type = 1;
@@ -354,42 +356,41 @@ int net_type(vp pts, int k){
 	return type;
 }
 
-vp toSubset(vp pts, int n, int k){
+vp toSubset(vp pts, int n, int k){ // returns a subset according to binary expansion of n - 1=present, 0=not present
 	vp subset;
 	f(i,0,k){
-		if(n%2 == 1)
+		if(n%2 == 1) //i-th position of binary expansion of n
 			subset.push_back(pts[i]);
 		n = n/2;
 	}
 
-	return subset;
+	return subset; // subset of pts
 }
 
-vi candidateFull(vp pins, int k){
-	int n = (int)pow(2,k);
+vi candidateFull(vp pins, int k){ // returns a vector of types of each subset of pins, in increasing order of decimal value of binary numbers
+	int n = (int)pow(2,k); // all subsets
 	int size;
 	vp subset;
 	vi full;
 
 	f(i,1,n){
-		subset = toSubset(pins, i, k);
-		size = subset.size();
-		full.push_back(net_type(subset, size));
+		subset = toSubset(pins, i, k); // subset corresponding to binary expansion of i
+		size = subset.size(); // size of the subset
+		full.push_back(net_type(subset, size)); // appending type of subset
 	}
 	return full;
 }
 
-vi all_subsets(int n, int k){
+vi all_subsets(int n, int k){ // returns all subsets of first k digits of binary expansion of n, 1=there, 0=not there
 	vi subsets;
 	vi ones;
-	f(i,0,k){
+	f(i,0,k){ // getting positions on 'ones' in first k digits of binary expansion of n
 		if(n%2==1)
 			ones.push_back(i);
 		n = n/2;
 	}
 
-	int l = ones.size();
-	vi coeff;
+	int l = ones.size(); // number of 'ones' in first k digits of binary expansion of n
 	int num,sum;
 	f(i,1,pow(2,l)){
 		num = i;
@@ -834,3 +835,4 @@ int main(int argc, char* argv[]){
 	return 0;
 
 }
+
