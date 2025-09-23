@@ -3,9 +3,9 @@
 
 A Bash-based simulation framework for generating and testing Steiner Tree algorithms using:
 
-- **Flute** (`flute-3.1`)
-- **GeoSteiner** (`geosteiner-5.3`)
-- **Cockayne (RSMT implementation)** (`Steiner Tree/Code/RSMT.cpp`)
+- **Flute** (`flute-3.1`) - a state of the art heuristic program for generating RSMT
+- **GeoSteiner** (`geosteiner-5.3`) - an exact algorithm for generating RSMT
+- **Cockayne (RSMT implementation)** (`\code\Cockayne Ishan.cpp`) - a dp-based exponential-time-complexity algorithm-modification of Dreyfus, Wagner's algorithm.
 
 ---
 
@@ -93,10 +93,6 @@ Dependencies:
 * Runtime errors are logged to corresponding `*_logs_*.txt` files
 
 ---
-
-## License
-
-MIT (or replace with your preferred license)
 
 ```
 ```
