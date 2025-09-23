@@ -367,7 +367,7 @@ vp toSubset(vp pts, int n, int k){ // returns a subset according to binary expan
 	return subset; // subset of pts
 }
 
-vi candidateFull(vp pins, int k){ // returns a vector of types of each subset of pins, in increasing order of decimal value of binary numbers
+vi candidateFull(vp pins, int k){ // returns a vector of types(0, if not full set) of each subset of pins, in increasing order of decimal value of binary numbers
 	int n = (int)pow(2,k); // all subsets
 	int size;
 	vp subset;
@@ -405,48 +405,48 @@ vi all_subsets(int n, int k){ // returns all subsets of first k digits of binary
 	return subsets;
 }
 
-vi steinerTreeValues(vp pins, int k){
+vi steinerTreeValues(vp pins, int k){ // steiner tree weight of all subsets of pins, corresponding to binary expansion of k.
 	int n = (int)pow(2,k)-1;
 	vi values;
-	vi F = candidateFull(pins,k);
-	vi subsets;
-	vi subsubsets;
+	vi F = candidateFull(pins,k); // see function description
+	vi subsets; // holds subsets
+	vi subsubsets;  // also holds subsets
 	vp pts;
 	int a,b;
 	int num;
 	int l;
 	double min;
-    vp dummy;
-    double dummy2;
+    vp dummy; // temp variable-iterates through all subsets of subset of pins, corresponding to binary expansion of k.
+    //double dummy2; // temp variable // don't need this
 
 	f(i,1,(n+1)){
 			dummy = toSubset(pins,i,k);
-			if(F[i-1]>0){
-				min = full_set_wt(dummy, dummy.size(), F[i-1]);
+			if(F[i-1]>0){  // if subset is full set candidate
+				min = full_set_wt(dummy, dummy.size(), F[i-1]); // full-set-weight of dummy
 			}
 			else
-				min = DBL_MAX;
+				min = DBL_MAX; // basically infinity
 			num = i;
-			subsets = all_subsets(i,k);
+			subsets = all_subsets(i,k); // vector of numbers, each of whose binary expansion is a subset of binary expansion of k
 			
 			f(j,0,(subsets.size()-1)){
-				if(F[subsets[j]-1]==0)
+				if(F[subsets[j]-1]==0) // if this particular set is not a full set candidate
 					continue;
 
-				a = subsets[j];
+				a = subsets[j]; // subset of dummy that is also a full set candidate
 
-				b = i - a;
+				b = i - a; // decimal corresponding to complement of subset for 1...1(i times)
 
-				subsubsets = all_subsets(a,k);
+				subsubsets = all_subsets(a,k); // all subsets of the candidate full set
 		
-				l = floor(log2(subsubsets.size()+1));
+				l = floor(log2(subsubsets.size()+1)); 
 
-				if(l==1)
+				if(l==1) // if full set candidate is singleton
 					continue;
 
 				f(x,0,l){
 					if(min>values[a-1] + values[b-1+subsubsets[pow(2,x)-1]]){
-						min = values[a-1] + values[b-1+subsubsets[pow(2,x)-1]];
+						min = values[a-1] + values[b-1+subsubsets[pow(2,x)-1]]; // comparing weights
 					}
 				}
 			}
@@ -456,7 +456,7 @@ vi steinerTreeValues(vp pins, int k){
 	return values;
 }
 
-void print_edge_list(graph tree){
+void print_edge_list(graph tree){ // prints edge list of graph
 	int k = tree.size();
 	f(i,0,k){
 		cout<<"("<<tree[i].p1.x<<" "<<tree[i].p1.y<<") ("<<tree[i].p2.x<<" "<<tree[i].p2.y<<")  ";
@@ -464,7 +464,7 @@ void print_edge_list(graph tree){
 	}
 }
 
-graph full_tree(vp pins, int type){
+graph full_tree(vp pins, int type){ // creates tree of required type
 	graph full;
 	edge e1;
 
@@ -666,6 +666,8 @@ graph full_tree(vp pins, int type){
 }
 
 graph steinerTree(vp pins, int k, vi F, vi values){
+	// F = vector of net types of subsets of pins
+	// values = steiner tree weights of all the subsets
 	vi subsets;
 	vi subsubsets;
 	vi Fs;
@@ -689,7 +691,7 @@ graph steinerTree(vp pins, int k, vi F, vi values){
 	
 
 
-	if(F[n-1]>0 && full_set_wt(pins, k, F[n-1]) == values[n-1]){
+	if(F[n-1]>0 && full_set_wt(pins, k, F[n-1]) == values[n-1]){ // if pins is a full set
 		tree = full_tree(pins, F[n-1]);
 	}
 	else{
@@ -753,7 +755,7 @@ graph steinerTree(vp pins, int k, vi F, vi values){
 	}
 	return tree;
 }
-int flutely(graph edgeList){
+int flutely(graph edgeList){ // converts the graph datatype to flute output format
 	vv<point> ps,pt,p;
 	fp(u,v,edgeList){
 		if(u.attribute&&!isinv(ps,u))ps.pb(u);else if(!u.attribute&&!isinv(pt,u))pt.pb(u);
@@ -835,4 +837,5 @@ int main(int argc, char* argv[]){
 	return 0;
 
 }
+
 
