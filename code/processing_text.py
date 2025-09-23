@@ -31,24 +31,33 @@ def parse_input_file(input_file):
 
 
 def parse_log_file(log_file, method_name):
-    """Parse one method's log file, return dict[test_id] = metrics"""
+    """Parse one method's log file line by line."""
     results = {}
     with open(log_file, "r") as f:
-        content = f.read()
+        lines = f.readlines()
 
-    pattern = re.compile(
-        r"Test Case (\d+).*?Num_Terminals = (\d+).*?Wirelength = (\d+).*?Num Steiner Points = (\d+).*?CPU Time = ([\d.]+)",
-        re.S
-    )
-
-    for match in pattern.findall(content):
-        test_id, _, wirelength, num_steiner, cpu_time = match
-        results[(int(test_id) + (int(_)-10)*10000)] = {
-            f"{method_name}_wirelength": int(wirelength),
-            f"{method_name}_steiner": int(num_steiner),
-            f"{method_name}_time": float(cpu_time)
-        }
+    test_id = 0
+    metrics = {}
+    for line in lines:
+        line = line.strip()
+        if line.startswith("Num_Terminals"):
+            metrics["num_terminals"] = int(line.split("=")[1].strip())
+        elif line.startswith("Wirelength"):
+            metrics["wirelength"] = int(line.split("=")[1].strip())
+        elif line.startswith("Num Steiner Points"):
+            metrics["steiner"] = int(line.split("=")[1].strip())
+        elif line.startswith("CPU Time"):
+            metrics["time"] = float(line.split("=")[1].strip().split()[0])
+            # End of a test case
+            test_id += 1
+            results[test_id] = {
+                f"{method_name}_wirelength": metrics["wirelength"],
+                f"{method_name}_steiner": metrics["steiner"],
+                f"{method_name}_time": metrics["time"]
+            }
+            metrics = {}  # reset for next test case
     return results
+
 
 
 def compile_all(input_file, cockayne_log, geosteiner_log, flute_log, result_csv):
