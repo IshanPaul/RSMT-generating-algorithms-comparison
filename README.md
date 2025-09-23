@@ -1,47 +1,102 @@
-# RSMT Benchmarking: Cockayne, GeoSteiner 5.3, and FLUTE 3.1  
+````markdown
+# Simulator.sh
 
-## Overview  
-This project benchmarks **Rectilinear Steiner Minimum Tree (RSMT)** generation tools—**Cockayne**, **GeoSteiner 5.3**, and **FLUTE 3.1**—with a focus on **runtime and performance comparisons**.  
+A Bash-based simulation framework for generating and testing Steiner Tree algorithms using:
 
-Our objective is to evaluate how these algorithms scale with problem size and complexity, highlighting trade-offs between accuracy and computational efficiency.  
-
-⚠️ **Note**: The full experimental dataset belongs to the **VLSI Lab, Indian Statistical Institute (ISI)** and cannot be shared publicly. However, sample input/output files are included to demonstrate usage and expected program behavior.  
-
----
-
-## Tools Compared  
-- **Cockayne** – A classical heuristic-based RSMT generator.  
-- **GeoSteiner 5.3** – A state-of-the-art exact algorithm for Steiner tree problems.  
-- **FLUTE 3.1** – A fast lookup-table-based method widely used in VLSI design automation.  
+- **Flute** (`flute-3.1`)
+- **GeoSteiner** (`geosteiner-5.3`)
+- **Cockayne (RSMT implementation)** (`Steiner Tree/Code/RSMT.cpp`)
 
 ---
 
-## Repository Contents  
-- `inputs/` – Example input files (subset only)  
-- `outputs/` – Corresponding example output files  
-- `scripts/` – Utility scripts for running and parsing results  
-- `README.md` – Project documentation (this file)  
-
----
-
-## Usage  
-
-### 1. Requirements  
-- Linux/Unix environment  
-- C/C++ compiler  
-- Python ≥ 3.8 (for parsing/plotting scripts)  
-
-Make sure the external tools (**Cockayne**, **GeoSteiner 5.3**, **FLUTE 3.1**) are installed and accessible in your system’s `$PATH`.  
-
-### 2. Running Benchmarks  
-Example usage:  
+## Usage
 
 ```bash
-# Run Cockayne
-./cockayne inputs/sample.in > outputs/cockayne_sample.out
+./Simulator.sh [options] <lower limit of #terminals> <upper limit of #terminals>
+````
 
-# Run GeoSteiner
-geosteiner -f inputs/sample.in -o outputs/geosteiner_sample.out
+### Options
 
-# Run FLUTE
-flute inputs/sample.in > outputs/flute_sample.out
+| Flag | Argument         | Description                                                                     |
+| ---- | ---------------- | ------------------------------------------------------------------------------- |
+| `-h` | none             | Show help message                                                               |
+| `-s` | `<seed>`         | Seed for the random number generator                                            |
+| `-n` | `<iterations>`   | Number of test cases to generate/run                                            |
+| `-a` | `<algo>`         | Algorithm(s) to run. Can include: `f` (Flute), `g` (GeoSteiner), `c` (Cockayne) |
+| `-i` | `<input_folder>` | Path to input/output folder (default: current directory)                        |
+
+---
+
+## Examples
+
+### Show help
+
+```bash
+./Simulator.sh -h
+```
+
+### Generate 10 test cases, terminals between 5 and 50
+
+```bash
+./Simulator.sh -n 10 5 50
+```
+
+### Run only Flute on 20 cases, terminals between 10–100
+
+```bash
+./Simulator.sh -a f -n 20 10 100
+```
+
+### Run all algorithms on an existing input file
+
+```bash
+./Simulator.sh -a fgc -i ./inputs -n 5 5 20
+```
+
+---
+
+## Output Files
+
+* **Inputs**: `in_<iterations>_<lower>-<upper>.txt`
+* **Algorithm outputs**:
+
+  * `flute_out_<iterations>_<lower>-<upper>.txt`
+  * `geosteiner_out_<iterations>_<lower>-<upper>.txt`
+  * `cockayne_out_<iterations>_<lower>-<upper>.txt`
+* **Logs**:
+
+  * `flute_logs_<iterations>_<lower>-<upper>.txt`
+  * `geosteiner_logs_<iterations>_<lower>-<upper>.txt`
+  * `cockayne_logs_<iterations>_<lower>-<upper>.txt`
+
+---
+
+## Requirements
+
+* **Bash** (5+ recommended)
+* **g++** (to compile Cockayne implementation)
+* **make** (to build Flute and GeoSteiner)
+
+Dependencies:
+
+* `flute-3.1/` → must contain `rand-pts` and `flute-demo`
+* `geosteiner-5.3/` → must contain `my_demo`
+* `Steiner Tree/Code/RSMT.cpp`
+
+---
+
+## Notes
+
+* You must provide `<lower>` and `<upper>` terminal limits
+* At least one algorithm must be specified using `-a`
+* Existing input files are truncated and regenerated automatically
+* Runtime errors are logged to corresponding `*_logs_*.txt` files
+
+---
+
+## License
+
+MIT (or replace with your preferred license)
+
+```
+```
