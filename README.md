@@ -94,6 +94,56 @@ Dependencies:
 
 ---
 
+## 🔄 Processing Raw Logs into CSV
+
+We provide a Python script [`processing_text.py`](./scripts/processing_text.py) to parse the **input** and **log files** from the three algorithms (Cockayne, GeoSteiner, and FLUTE), and compile them into a single CSV (`summary.csv`).
+
+### Usage
+
+```bash
+cd scripts
+python processing_text.py
+```
+
+This will read:
+
+* `../inputs/input.txt`
+* `../logs/cockayne.txt`
+* `../logs/geosteiner.txt`
+* `../logs/flute.txt`
+
+and output:
+
+* `summary.csv` (in the current folder)
+
+### What It Does
+
+* **Parse input file** to extract:
+
+  * `test_id`
+  * number of points
+  * grid size
+* **Parse each solver log** (`cockayne`, `geosteiner`, `flute`) to extract:
+
+  * wirelength
+  * number of Steiner points
+  * runtime (CPU time)
+* **Merge everything** into a single CSV for downstream analysis (e.g., in R).
+
+### Example Output (`summary.csv`)
+
+| test\_id | num\_points | grid\_size | cockayne\_steiner | geosteiner\_steiner | flute\_steiner | cockayne\_wirelength | geosteiner\_wirelength | flute\_wirelength | cockayne\_time | geosteiner\_time | flute\_time |
+| -------- | ----------- | ---------- | ----------------- | ------------------- | -------------- | -------------------- | ---------------------- | ----------------- | -------------- | ---------------- | ----------- |
+| 1        | 10          | 8418       | 9                 | 9                   | 9              | 20446                | 20446                  | 20446             | 0.0776         | 0.000659         | 0.00015     |
+| 2        | 10          | 8617       | 9                 | 9                   | 9              | 19281                | 19281                  | 19407             | 0.1356         | 0.000326         | 0.000015    |
+
+### Extending
+
+* To add another algorithm, simply parse its log file using `parse_log_file` and merge into `compile_all`.
+* To change file locations, edit the paths at the bottom of the script or replace them with command-line arguments.
+
+---
+
 ## 📊 Data Analysis
 
 After generating and collecting results from the three algorithms (Cockayne, Geosteiner, Flute), we perform exploratory data analysis and regression modeling in **R**.
