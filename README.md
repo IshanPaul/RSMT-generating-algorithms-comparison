@@ -172,7 +172,7 @@ dev.off()
 ```
 
 📷 The resulting file `plots/all_diagnostics.jpg` contains **12 diagnostic plots** (4 for each algorithm).
-
+![Residual plots](plots/all_diagnostics.jpg)
 ---
 
 ### Summary
