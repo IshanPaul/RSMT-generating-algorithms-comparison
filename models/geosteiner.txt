@@ -1,0 +1,25 @@
+Call:
+lm(formula = geosteiner_time ~ as.factor(num_points) + grid_size + 
+    geosteiner_steiner + geosteiner_wirelength, data = df)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+-0.0002173 -0.0000664 -0.0000196  0.0000345  0.0038576 
+
+Coefficients:
+                          Estimate Std. Error t value Pr(>|t|)    
+(Intercept)              2.045e-04  3.434e-05   5.955 2.61e-09 ***
+as.factor(num_points)11  2.654e-05  4.562e-06   5.817 6.03e-09 ***
+as.factor(num_points)12  4.617e-05  8.571e-06   5.387 7.19e-08 ***
+as.factor(num_points)13  9.936e-05  1.270e-05   7.824 5.21e-15 ***
+as.factor(num_points)14  1.266e-04  1.686e-05   7.509 6.05e-14 ***
+grid_size               -1.044e-08  1.079e-09  -9.676  < 2e-16 ***
+geosteiner_steiner      -1.588e-06  4.189e-06  -0.379    0.705    
+geosteiner_wirelength    3.945e-09  2.366e-10  16.674  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0001262 on 49992 degrees of freedom
+Multiple R-squared:  0.1388,    Adjusted R-squared:  0.1387 
+F-statistic:  1151 on 7 and 49992 DF,  p-value: < 2.2e-16
+

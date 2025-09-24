@@ -1,0 +1,24 @@
+Call:
+lm(formula = flute_time ~ as.factor(num_points) + grid_size + 
+    flute_steiner + flute_wirelength, data = df)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+-4.842e-05 -2.720e-06 -7.500e-07  9.800e-07  1.740e-03 
+
+Coefficients: (1 not defined because of singularities)
+                          Estimate Std. Error t value Pr(>|t|)    
+(Intercept)              4.692e-06  1.791e-06   2.620  0.00879 ** 
+as.factor(num_points)11  2.369e-06  4.059e-07   5.836 5.39e-09 ***
+as.factor(num_points)12  1.305e-05  4.175e-07  31.246  < 2e-16 ***
+as.factor(num_points)13  2.485e-05  4.348e-07  57.160  < 2e-16 ***
+as.factor(num_points)14  4.526e-05  4.565e-07  99.148  < 2e-16 ***
+grid_size               -1.282e-09  2.430e-10  -5.278 1.31e-07 ***
+flute_steiner                   NA         NA      NA       NA    
+flute_wirelength         4.706e-10  5.320e-11   8.846  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.843e-05 on 49993 degrees of freedom
+Multiple R-squared:  0.2693,    Adjusted R-squared:  0.2692 
+F-statistic:  3070 on 6 and 49993 DF,  p-value: < 2.2e-16

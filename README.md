@@ -96,3 +96,96 @@ Dependencies:
 
 ```
 ```
+## 📊 Data Analysis
+
+After generating and collecting results from the three algorithms (Cockayne, Geosteiner, Flute), we perform exploratory data analysis and regression modeling in **R**.
+
+### 1. Loading the Data
+The combined results are stored in `datasets/summary.csv`. Each row corresponds to a test case and includes:
+- `num_points`: number of terminals
+- `grid_size`: maximum span of x/y coordinates
+- `*_steiner`: number of Steiner points detected by each algorithm
+- `*_wirelength`: total wirelength for each algorithm
+- `*_time`: CPU runtime for each algorithm
+
+```r
+df <- read.csv("datasets/summary.csv")
+head(df)
+````
+
+### 2. Runtime Comparison
+
+We reshape the runtime columns into a long format and compare distributions with **boxplots**:
+
+```r
+library(ggplot2)
+
+df2 <- data.frame(
+  time = c(df$cockayne_time, df$flute_time, df$geosteiner_time),
+  label = as.factor(c(
+    rep("cockayne", nrow(df)),
+    rep("flute", nrow(df)),
+    rep("geosteiner", nrow(df))
+  ))
+)
+
+p1 <- ggplot(df2, aes(x = label, y = time)) +
+  geom_boxplot() +
+  theme_minimal()
+
+ggsave("plots/myplot.png", plot = p1, width = 6, height = 4, dpi = 300)
+```
+
+📷 Example output (saved as `plots/myplot.png`):
+
+![Runtime Comparison](plots/myplot.png)
+
+### 3. Regression Models
+
+We fit linear regression models to identify which factors (number of points, grid size, Steiner points, wirelength) explain algorithm runtimes:
+
+```r
+# Cockayne
+m_cockayne <- lm(cockayne_time ~ as.factor(num_points) + grid_size + cockayne_steiner + cockayne_wirelength, data = df)
+summary(m_cockayne)
+
+# Geosteiner
+m_geo <- lm(geosteiner_time ~ as.factor(num_points) + grid_size + geosteiner_steiner + geosteiner_wirelength, data = df)
+summary(m_geo)
+
+# Flute
+m_flute <- lm(flute_time ~ as.factor(num_points) + grid_size + flute_steiner + flute_wirelength, data = df)
+summary(m_flute)
+```
+
+These models help quantify the effect of grid size and Steiner points on runtime.
+
+### 4. Diagnostic Plots
+
+Residual diagnostics for all models are saved together for model validation:
+
+```r
+jpeg("plots/all_diagnostics.jpg", width = 1800, height = 1200, res = 150)
+par(mfrow = c(3, 4))
+plot(m_cockayne, which = 1:4, main = "Cockayne")
+plot(m_geo, which = 1:4, main = "Geosteiner")
+plot(m_flute, which = 1:4, main = "Flute")
+dev.off()
+```
+
+📷 The resulting file `plots/all_diagnostics.jpg` contains **12 diagnostic plots** (4 for each algorithm).
+
+---
+
+### Summary
+
+* **Boxplots** show the distribution of runtimes across algorithms.
+* **Regression models** identify key predictors of runtime.
+* **Diagnostics** check assumptions of linear regression.
+
+This analysis pipeline provides both descriptive and inferential insights into algorithm performance.
+
+```
+
+---
+

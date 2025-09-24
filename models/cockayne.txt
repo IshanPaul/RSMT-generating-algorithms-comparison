@@ -1,0 +1,25 @@
+Call:
+lm(formula = cockayne_time ~ as.factor(num_points) + grid_size + 
+    cockayne_steiner + cockayne_wirelength, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.9970 -0.0622 -0.0041  0.0529 15.7014 
+
+Coefficients:
+                          Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             -1.045e-01  6.569e-02  -1.591 0.111608    
+as.factor(num_points)11  3.270e-02  9.304e-03   3.514 0.000441 ***
+as.factor(num_points)12  2.085e-01  1.628e-02  12.813  < 2e-16 ***
+as.factor(num_points)13  8.317e-01  2.373e-02  35.045  < 2e-16 ***
+as.factor(num_points)14  2.845e+00  3.127e-02  90.963  < 2e-16 ***
+grid_size               -4.589e-05  3.155e-06 -14.546  < 2e-16 ***
+cockayne_steiner         1.901e-02  7.673e-03   2.478 0.013207 *  
+cockayne_wirelength      1.663e-05  6.917e-07  24.036  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.369 on 49992 degrees of freedom
+Multiple R-squared:  0.9015,    Adjusted R-squared:  0.9015 
+F-statistic: 6.537e+04 on 7 and 49992 DF,  p-value: < 2.2e-16
+
