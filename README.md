@@ -94,8 +94,6 @@ Dependencies:
 
 ---
 
-```
-```
 ## 📊 Data Analysis
 
 After generating and collecting results from the three algorithms (Cockayne, Geosteiner, Flute), we perform exploratory data analysis and regression modeling in **R**.
@@ -184,8 +182,6 @@ dev.off()
 * **Diagnostics** check assumptions of linear regression.
 
 This analysis pipeline provides both descriptive and inferential insights into algorithm performance.
-
-```
 
 ---
 
